@@ -1,0 +1,21 @@
+{
+  "name": "vue-container",
+  "version": "1.0.0",
+  "description": "A simple IoC container for VueJS",
+  "main": "dist/vuec.js",
+  "author": "Wannes Gennar <wannes.gennar@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "webpack -p",
+    "dev": "webpack"
+  },
+  "devDependencies": {
+    "babel-core": "^6.23.1",
+    "babel-loader": "^6.3.2",
+    "babel-preset-env": "^1.2.0",
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
+    "vue": "^2.2.1",
+    "webpack": "^2.2.1"
+  }
+}
