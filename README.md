@@ -2,7 +2,7 @@
 ## Vue container - a simple IoC container for VueJS
 
 ### Installation
-Install using `yarn add vue-container` or `npm install --save `vue-container`
+Install using `yarn add vue-container` or `npm install --save vue-container`
 
 ### Dependencies
 **NONE**! We don't even depend on VueJS (except in the devDependencies for unit testing).
