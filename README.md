@@ -2,7 +2,7 @@
 ## Vue container - a simple IoC container for VueJS
 
 ### Installation
-Install using `yarn add vue-container` or `npm install --save `vue-container`
+Install using `yarn add vue-container` or `npm install --save vue-container`
 
 ### Dependencies
 **NONE**! We don't even depend on VueJS (except in the devDependencies for unit testing).
@@ -11,7 +11,7 @@ You can even use this without Webpack or Browserify, the container is accessible
 ### Introduction
 
 If you have worked with Vue before, you'll probably have done things like this:
-```js
+```vue
 <script>
 import Axios from 'axios';
 
@@ -31,7 +31,7 @@ export default {
 You can use [plugins](https://vuejs.org/v2/guide/plugins.html) to inject dependencies into your Vue object, but that also means that every dependency you need somewhere would have to be injected on *every* instance of Vue you make.
 
 With vuec you can write the same code as above like this:
-```js
+```vue
 <script>
 export default {
 	name: 'SomeComponent',
@@ -50,25 +50,25 @@ Note how we're no longer importing the Axios module. Vuec takes care of injectin
 
 ### Usage
 registering Vuec in your application is as easy as
-```js
+```javascript
 import Vuec from 'vue-container';
 
 Vue.use(Vuec);
 ```
 Registering a dependency in the container (like Axios in the above example) is done using `register`
-```js
+```javascript
 Vue.$ioc.register('Axios', Axios);
 // Or inside a Vue component:
 this.$ioc.register('Axios', Axios);
 ```
 You can also manually resolve from the container using the `resolve` function:
-```js
+```javascript
 Vue.$ioc.resolve('Axios');
 // Or inside a Vue component:
 this.$ioc.resolve('Axios');
 ```
 So how do you call a function with all it's dependencies?
-```js
+```javascript
 function test(Axios) {
 	console.info(Axios);
 }
@@ -80,7 +80,7 @@ this.$ioc.prepare(test)();
 **But you didn't pass `Axios` as an argument!**
 
 Indeed, the `prepare` method of Vuec returns a bound copy of the function with all it's parameters already bound, you can call this function as many times as you want and it will have it's dependencies every time. If you want a custom scope, you can always pass your this argument as the second parameter to the `prepare` method.
-```js
+```javascript
 function test(Axios) {
 	console.info(Axios);
 }
