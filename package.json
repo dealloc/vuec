@@ -4,6 +4,7 @@
   "description": "A simple IoC container for VueJS",
   "main": "dist/vuec.js",
   "author": "Wannes Gennar <wannes.gennar@gmail.com>",
+  "repository": "git@github.com:dealloc/vuec.git",
   "license": "MIT",
   "scripts": {
     "build": "webpack -p",
