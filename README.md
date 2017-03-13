@@ -1,5 +1,5 @@
 # Vuec
-## Vue container - a simple IoC container for VueJS
+## Vue container - a simple IoC container for Vue 2
 
 ### Installation
 Install using `yarn add vue-container` or `npm install --save vue-container`
@@ -91,3 +91,6 @@ prepared();
 prepared();
 ```
 In the above example despite being called 3x the container will only have to resolve the dependencies once!
+
+### Does this work with Vue 1.x?
+It probably should, given that Vue manages it's hooks the same way, but it hasn't been tested yet, if you do feel free to make an issue and report any problems you run into.
