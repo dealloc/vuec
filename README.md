@@ -1,5 +1,5 @@
 # Vuec
-## Vue container - a simple IoC container for VueJS
+## Vue container - a simple IoC container for Vue 2
 
 ### Installation
 Install using `yarn add vue-container` or `npm install --save vue-container`
@@ -48,6 +48,28 @@ export default {
 ```
 Note how we're no longer importing the Axios module. Vuec takes care of injecting your dependencies into your hooks. Except for `beforeCreate` all hooks can specify their dependencies and Vuec will inject them.
 
+### Why use dependency injection?
+In the example above we showed you how you could eliminate your imports (mostly) by using dependency injection.
+You might by now be thinking "hey that's pretty cool, but *why* would I do that?". There's a couple reasons why you might want to use dependency injection in VueJS
+- testability (we'll cover this one in detail below)
+- explicit dependencies: rather than having a bunch of imports thrown all over, you can now see what dependencies your component relies on (because other than dependencies you might import components, css files, ...)
+- easier refactoring (rather than having to wrap those modules so you can swap them, just swap their binding in the container)
+
+As mentioned above in the list, testability is improved by using dependency injection. Imagine you're writing an application that makes calls to an API, you're probably using a package for making those HTTP requests (like [vue-resource](https://github.com/pagekit/vue-resource) or [Axios](https://github.com/mzabriskie/axios) or even [fetch](https://github.com/github/fetch)). However, when you're running your unit tests you'd probably rather not have those tests run wild and create 200 users in your API.
+Using dependency injection you could just swap out the binding for your HTTP service with a dummy service (that could for example assert the required calls are made), without having to change a single line of code.
+
+Simply put, in your code you could have:
+```javascript
+Vue.$ioc.register('$http', Axios);
+```
+And for your unit tests you could overwrite the binding
+```javascript
+Vue.$ioc.register('$http', AxiosDummyModule);
+```
+Your components however remain entirely unchanged.
+
+**in short** depenency injection allows you to abstract your code a step further and makes your components truly standalone and easier to test.
+
 ### Usage
 registering Vuec in your application is as easy as
 ```javascript
@@ -91,3 +113,6 @@ prepared();
 prepared();
 ```
 In the above example despite being called 3x the container will only have to resolve the dependencies once!
+
+### Does this work with Vue 1.x?
+It probably should, given that Vue manages it's hooks the same way, but it hasn't been tested yet, if you do feel free to make an issue and report any problems you run into.
