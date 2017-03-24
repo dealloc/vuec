@@ -1,6 +1,6 @@
 {
   "name": "vue-container",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A simple IoC container for VueJS",
   "main": "dist/vuec.js",
   "author": "Wannes Gennar <wannes.gennar@gmail.com>",
