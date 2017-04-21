@@ -48,4 +48,29 @@ describe('Container', function() {
 			assert.equal(container.resolve('function')(), 12345);
 		});
 	});
+	describe('#has', function () {
+		it('Should return false when a binding doesn\'t exist', function () {
+			const container = new vuec.Container();
+			assert.equal(container.has('foo'), false);
+		});
+		it('Should return true when a binding exists', function () {
+			const container = new vuec.Container();
+			container.register('foo', 'foobar');
+			assert.equal(container.has('foo'), true);
+		});
+	});
+	describe('#unregister', function () {
+		it('Should remove a registered binding', function () {
+			const container = new vuec.Container();
+			container.register('foo', 'Hello world');
+			assert.equal(container.has('foo'), true);
+			container.unregister('foo');
+			assert.equal(container.has('foo'), false);
+		});
+		it('Should ignore an unregistered binding', function () {
+			const container = new vuec.Container();
+			container.unregister('foo');
+			assert.equal(container.has('foo'), false);
+		});
+	});
 });

@@ -7,6 +7,20 @@ export default class Container {
 		this.$cache.set(name, value);
 	}
 
+	unregister(name) {
+		if (this.$cache.has(name)) {
+			this.$cache.delete(name);
+		}
+	}
+
+	has(name) {
+		return this.$cache.has(name);
+	}
+
+	bindings() {
+		return this.$cache.entries();
+	}
+
 	resolve(name) {
 		if (this.$cache.has(name)) {
 			return this.$cache.get(name);

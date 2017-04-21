@@ -116,3 +116,8 @@ In the above example despite being called 3x the container will only have to res
 
 ### Does this work with Vue 1.x?
 It probably should, given that Vue manages it's hooks the same way, but it hasn't been tested yet, if you do feel free to make an issue and report any problems you run into.
+
+### What's new?
+- 21/04/2017
+	- added `unregister` to remove bindings and `bindings` to get all registered services.
+	- added `has` method to check if a container has a binding
