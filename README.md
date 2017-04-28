@@ -4,6 +4,8 @@
 ### Installation
 Install using `yarn add vue-container` or `npm install --save vue-container`
 
+**warning**: when building for production, make sure to read [this](#mangling)
+
 ### Dependencies
 **NONE**! We don't even depend on VueJS (except in the devDependencies for unit testing).
 You can even use this without Webpack or Browserify, the container is accessible from `window.vuec.Container` and the Vue bindings as `vuec.default` (the unit tests are actually written in plain ES5 so you can start there to get an idea!)
@@ -114,10 +116,55 @@ prepared();
 ```
 In the above example despite being called 3x the container will only have to resolve the dependencies once!
 
+### Usage with VueJS
+Vuec will automatically hook itself into the component lifecycle to resolve dependencies,
+or if you prefer you can use the `services` property to define your dependencies, it's up to your preference.
+
+To use method injection, you simply write your components like this:
+```javascript
+new Vue({
+    // ... pass your component parameters here
+    mounted($http) {
+        // vuec will inject the '$http' service for you here
+    }
+});
+```
+
+Or if you prefer to define your services in an array on your component (which prevents [name mangling](#mangling))
+```javascript
+new Vue({
+    // ... pass your component parameters here
+    services: ['$http'],
+    mounted() {
+        // the $http service is available under this.$services.$http
+    }
+});
+```
+
 ### Does this work with Vue 1.x?
 It probably should, given that Vue manages it's hooks the same way, but it hasn't been tested yet, if you do feel free to make an issue and report any problems you run into.
+
+### mangling
+When building for production you'll most likely minify your code. Most minifiers employ a technique called "name mangling"
+which poses a couple problems with this library if you use method injection. You can read more about this [here](https://github.com/dealloc/vuec/issues/3).
+
+In short, you'll need to ensure your minifier won't mangle the parameter names of your services, for UglifyJS (default for webpack) this can be done like this:
+```javascript
+new webpack.optimize.UglifyJsPlugin({
+  compress: {
+    warnings: false
+  },
+  sourceMap: true,
+  mangle: {
+    except: ['Service'], // blacklist your services from being mangled
+  }
+})
+```
 
 ### What's new?
 - 21/04/2017
 	- added `unregister` to remove bindings and `bindings` to get all registered services.
 	- added `has` method to check if a container has a binding
+- 28/04/2017
+    - added instance binding
+    - updated documentation with warning about name mangling
