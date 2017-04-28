@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "build": "webpack -p",
-    "dev": "webpack"
+    "dev": "webpack --watch"
   },
   "devDependencies": {
     "babel-core": "^6.23.1",

@@ -7,13 +7,23 @@ const patchHook = ($vm, hook, container) => {
 	}
 };
 
+const injectServices = ($vm, container) => {
+	if ($vm.$options.services !== undefined) {
+		$vm.$options.services.forEach(service => {
+			$vm.$services[service] = container.resolve(service);
+		});
+	}
+};
+
 const container = new Container; // eslint-disable-line
 export default {
 	install(Vue) {
+		Vue.prototype.$services = [];
 		Vue.prototype.$ioc = container;
 		Vue.$ioc = container;
 		Vue.mixin({
 			beforeCreate() {
+				injectServices(this, container);
 				patchHook(this, 'created', container);
 				patchHook(this, 'beforeMount', container);
 				patchHook(this, 'mounted', container);
