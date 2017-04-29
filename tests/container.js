@@ -76,6 +76,33 @@ describe('Container', function() {
 			assert.equal(container.has('foo'), true);
 		});
 	});
+	describe('#prepare', function () {
+		it('Should return a function', function () {
+			const container = new vuec.Container();
+			container.register('foo', 'bar');
+			const method = (foo) => assert.equal(foo, 'bar');
+
+			assert.isFunction(container.prepare(method));
+		});
+		it('Should resolve all parameters', function () {
+			const container = new vuec.Container();
+			container.register('foo', 'bar');
+			const method = (foo) => assert.equal(foo, 'bar');
+
+			const resolved = container.prepare(method);
+			resolved();
+		});
+		it('Should resolve only once', function () {
+			const container = new vuec.Container();
+			container.register('foo', 'bar');
+			const method = (foo) => assert.equal(foo, 'bar');
+			const resolved = container.prepare(method);
+			container.register('foo', 'foobar');
+			assert.equal(container.resolve('foo'), 'foobar');
+
+			resolved();
+		});
+	});
 	describe('#unregister', function () {
 		it('Should remove a registered binding', function () {
 			const container = new vuec.Container();

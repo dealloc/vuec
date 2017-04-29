@@ -35,19 +35,14 @@ export default class Container {
 	}
 
 	prepare(func, self = null) {
-		const extracted = func.toString().match(/^function\s*[^(]*\(\s*([^)]*)\)/m);
+		const extracted = func.toString().match(/^(function)?\s*[^(]*\(\s*([^)]*)\)?/m);
 		if (extracted === null) {
-			if (func.toString().indexOf('function') === -1) {
-				console.warn(`Parsing ${func.name} failed:`,
-					'ES6 method notation is not supported yet (see https://goo.gl/YKfg9R).',
-					'Use a transpiler or ES5 notation.');
-			} else {
-				console.warn(`Extraction failed for ${func.name}`);
-			}
+			console.warn(`Extraction failed for ${func.name}`);
 			return func.bind(self);
 		}
 
-		const params = extracted[1]
+		const es6Mode = extracted[1] === 'function' || extracted[1] === undefined;
+		const params = (es6Mode ? extracted[2] : extracted[1])
 			.replace(/ /g, '')
 			.split(',')
 			.filter(dep => dep !== '')
