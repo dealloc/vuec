@@ -47,6 +47,23 @@ describe('Container', function() {
 			assert.equal(container.resolve('function'), fnc);
 			assert.equal(container.resolve('function')(), 12345);
 		});
+		it('Should throw when target doesn\'t exist (development)', function() {
+			const container = new vuec.Container();
+			if (container.production === true) return;
+
+			try {
+				container.resolve('test');
+				assert.fail('Resolve should\'ve thrown!');
+			} catch (error) {
+				assert(/Unknown dependency "test"/.test(error));
+			}
+		});
+		it('Should return undefined when target doesn\'t exist (production)', function() {
+			const container = new vuec.Container();
+			if (container.production === false) return;
+
+			assert.isUndefined(container.resolve('test'));
+		});
 	});
 	describe('#has', function () {
 		it('Should return false when a binding doesn\'t exist', function () {

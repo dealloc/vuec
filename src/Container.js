@@ -1,6 +1,7 @@
 export default class Container {
 	constructor() {
 		this.$cache = new Map();
+		this.production = Boolean(process.env.NODE_ENV === 'production');
 	}
 
 	register(name, value) {
@@ -26,7 +27,11 @@ export default class Container {
 			return this.$cache.get(name);
 		}
 
-		return undefined;
+		if (this.production) {
+			return undefined;
+		}
+
+		throw new Error(`Unknown dependency "${name}"`);
 	}
 
 	prepare(func, self = null) {
@@ -45,6 +50,7 @@ export default class Container {
 		const params = extracted[1]
 			.replace(/ /g, '')
 			.split(',')
+			.filter(dep => dep !== '')
 			.map(this.resolve.bind(this));
 
 		return func.bind(self, ...params);

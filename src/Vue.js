@@ -17,6 +17,7 @@ const injectServices = ($vm, container) => {
 
 const container = new Container; // eslint-disable-line
 export default {
+	production: process.env.NODE_ENV === 'production',
 	install(Vue) {
 		Vue.prototype.$services = [];
 		Vue.prototype.$ioc = container;

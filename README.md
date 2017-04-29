@@ -91,6 +91,14 @@ Vue.$ioc.resolve('Axios');
 // Or inside a Vue component:
 this.$ioc.resolve('Axios');
 ```
+*so what happens when you try to resolve a dependency that does not exist? That depends, in development this will throw an error, but in production it will silently return undefined. You can test for production mode on the `production` property of the container.
+You can enable production mode by setting the environment variable `NODE_ENV=production`*
+```javascript
+this.$ioc.resolve('foo');
+// in development this would throw Unknown dependency "foo"
+// in production this returns undefined
+```
+
 So how do you call a function with all it's dependencies?
 ```javascript
 function test(Axios) {
@@ -166,5 +174,7 @@ new webpack.optimize.UglifyJsPlugin({
 	- added `unregister` to remove bindings and `bindings` to get all registered services.
 	- added `has` method to check if a container has a binding
 - 28/04/2017
-    - added instance binding
-    - updated documentation with warning about name mangling
+	- added instance binding
+	- updated documentation with warning about name mangling
+- 29/04/2017
+	- added production and development mode
