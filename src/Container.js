@@ -34,7 +34,7 @@ export default class Container {
 		throw new Error(`Unknown dependency "${name}"`);
 	}
 
-	prepare(func, self = null) {
+	parameters(func) {
 		const extracted = func.toString().match(/^(function)?\s*[^(]*\(\s*([^)]*)\)?/m);
 		if (extracted === null) {
 			console.warn(`Extraction failed for ${func.name}`);
@@ -42,11 +42,16 @@ export default class Container {
 		}
 
 		const es6Mode = extracted[1] === 'function' || extracted[1] === undefined;
-		const params = (es6Mode ? extracted[2] : extracted[1])
+
+		return (es6Mode ? extracted[2] : extracted[1])
 			.replace(/ /g, '')
 			.split(',')
 			.filter(dep => dep !== '')
 			.map(this.resolve.bind(this));
+	}
+
+	prepare(func, self = null) {
+		const params = this.parameters(func);
 
 		return func.bind(self, ...params);
 	}
