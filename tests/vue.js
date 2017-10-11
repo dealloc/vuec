@@ -87,22 +87,22 @@ describe('VueJS bindings', function() {
 				const child = {
 					template: '<div></div>',
 					mounted: function () {
-            // console.log(this._uid);
+						// console.log(this._uid);
 						var executed = false;
 						try {
-              assert.equal(uuid.indexOf(this._uid), -1);
-              executed = true;
-            }
-            catch(ex) {
+							assert.equal(uuid.indexOf(this._uid), -1);
+							executed = true;
+						}
+						catch(ex) {
 							done(ex);
 						}
-            finally {
-              uuid.push(this._uid);
-              if (++count === 2 && executed) {
-                // two instances of child-element component has been created
-                done();
-              }
-            }
+						finally {
+							uuid.push(this._uid);
+							if (++count === 2 && executed) {
+								// two instances of child-element component has been created
+								done();
+							}
+						}
 					}
 				};
 				new Vue({
