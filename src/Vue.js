@@ -1,12 +1,12 @@
 import Container from './Container';
 
-const patchHook = ($vm, hook, container) => {
-	const hooks = $vm.$options[hook];
+const patchHook = ($vm, hookName, container) => {
+	const hooks = $vm.$options[hookName];
 	if (hooks && hooks.length > 0) {
 		const params = container.parameters(hooks[hooks.length - 1]);
-		const hook = hooks[hooks.length - 1].bind($vm);
+		const hook = hooks[hooks.length - 1];
 		hooks[hooks.length - 1] = function () {
-			hook.call(null, ...params);
+			hook.call(this, ...params);
 		};
 	}
 };
