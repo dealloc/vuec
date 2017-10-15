@@ -81,22 +81,34 @@ describe('VueJS bindings', function() {
 				});
 			});
 			it('Should bind on the correct instances.', function (done) {
-				var uuid = 0;
+				var uuid = [];
+				var count = 0;
+
 				const child = {
 					template: '<div></div>',
 					mounted: function () {
-						uuid = this._uid;
+						// console.log(this._uid);
+						var executed = false;
+						try {
+							assert.equal(uuid.indexOf(this._uid), -1);
+							executed = true;
+						}
+						catch(ex) {
+							done(ex);
+						}
+						finally {
+							uuid.push(this._uid);
+							if (++count === 2 && executed) {
+								// two instances of child-element component has been created
+								done();
+							}
+						}
 					}
 				};
 				new Vue({
 					el: '#app',
-					template: '<div><child-element></child-element></div>',
+					template: '<div><child-element /><child-element /></div>',
 					components: { 'child-element': child },
-					mounted: function () {
-						assert.notEqual(this._uid, uuid);
-						assert.notEqual(this._uid, 0);
-						done();
-					}
 				});
 			});
 		});
