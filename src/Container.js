@@ -104,7 +104,7 @@ export default class Container {
    * @returns {Array}
    * @protected
    */
-	toEntries(map) {
+	toEntries(map = {}) {
 		return Object.keys(map).map((key) => {
 			return [key, map[key]]
 		});
