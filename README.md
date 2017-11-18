@@ -63,6 +63,8 @@ Using dependency injection you could just swap out the binding for your HTTP ser
 Simply put, in your code you could have:
 ```javascript
 Vue.$ioc.register('$http', Axios);
+Vue.$ioc.register(convertCurrency); // will be registered as 'convertCurrency'
+Vue.$ioc.register(new PostService()); // will be registered as 'PostService'
 ```
 And for your unit tests you could overwrite the binding
 ```javascript
@@ -85,6 +87,17 @@ Vue.$ioc.register('Axios', Axios);
 // Or inside a Vue component:
 this.$ioc.register('Axios', Axios);
 ```
+Also you can pass dependencies map to container when register plugin
+```javascript
+import Vuec from 'vue-container';
+
+Vue.use(Vuec, {
+  register: {
+    $http: Axios
+  }
+});
+```
+
 You can also manually resolve from the container using the `resolve` function:
 ```javascript
 Vue.$ioc.resolve('Axios');

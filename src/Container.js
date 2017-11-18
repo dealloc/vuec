@@ -1,41 +1,124 @@
+const isFunc = (val) => typeof val === 'function';
+const isString = (val) => typeof val === 'string';
+const isObject = (val) => typeof val === 'object';
+
 export default class Container {
-	constructor() {
-		this.$cache = new Map();
+
+	constructor(map) {
+		this.$cache = new Map(this.toEntries(map));
 		this.production = Boolean(process.env.NODE_ENV === 'production');
 	}
 
-	register(name, value) {
-		this.$cache.set(name, value);
+  /**
+   * Register dependency in container by given name or by function name
+   * @param name {Function|Object|String}
+   * @param dependency {any}
+   * @returns {Container}
+   */
+	register(name, dependency) {
+		const {key, value} = this.extractDep(name, dependency);
+
+    this.$cache.set(key, value);
+
+		return this;
 	}
 
+  /**
+   * Removes dependency from container by given name or by function name
+   * @param name {Function|String}
+   * @returns {Container}
+   */
 	unregister(name) {
-		if (this.$cache.has(name)) {
-			this.$cache.delete(name);
+		const {key} = this.extractDep(name);
+
+		if (this.$cache.has(key)) {
+			this.$cache.delete(key);
 		}
+
+		return this;
 	}
 
+  /**
+   * Check if dependency exists in container
+   * @param name {String}
+   * @returns {boolean}
+   */
 	has(name) {
-		return this.$cache.has(name);
+		const {key} = this.extractDep(name);
+
+		return this.$cache.has(key);
 	}
 
+  /**
+   * Returns iterator of values as [key, dependency]
+   * @returns {Iterator.<*>}
+   */
 	bindings() {
 		return this.$cache.entries();
 	}
 
+  /**
+   * Resolves dependency only by string name
+   * @param name {String}
+   * @returns {any}
+   */
 	resolve(name) {
+		if (isFunc(name) || isObject(name)) {
+			const {key} = this.extractDep(name);
+			console.warn(`Don't try to resolve dependency "${key}" by dependency itself`)
+		}
+
 		if (this.$cache.has(name)) {
 			return this.$cache.get(name);
 		}
 
 		if (this.production) {
-			return undefined;
+			return void 0;
 		}
 
 		throw new Error(`Unknown dependency "${name}"`);
 	}
 
+  /**
+   * Extract dependency name from key and return as {key, value} pair
+   * @param key {Function|Object|String|any}
+   * @param value {any}
+   * @returns {{key:string, value:any}}
+   * @protected
+   */
+	extractDep(key, value = null) {
+    if (isFunc(key) && isString(key.name)) {
+    	return {key: key.name, value: key}; // jus a function or class
+		}
+
+    if (isObject(key) && isFunc(key.constructor) && isString(key.constructor.name)) {
+      return {key: key.constructor.name, value: key};// instance of class or function
+    }
+
+		return {key, value};
+	}
+
+  /**
+   * Converts object to [key, value] array
+   * @param map {Object}
+   * @returns {Array}
+   * @protected
+   */
+	toEntries(map) {
+		return Object.keys(map).map((key) => {
+			return [key, map[key]]
+		});
+	}
+
+  /**
+   * Extracts all dependencies names from given function
+   * @param func {Function}
+   * @returns {Array}
+   * @protected
+   */
 	parameters(func) {
 		const extracted = func.toString().match(/^(function)?\s*[^(]*\(\s*([^)]*)\)?/m);
+
 		if (extracted === null) {
 			console.warn(`Extraction failed for ${func.name}`);
 			return func.bind(self);
@@ -50,6 +133,11 @@ export default class Container {
 			.map(this.resolve.bind(this));
 	}
 
+  /**
+   * Injects dependencies into the function by arguments
+   * @param func
+   * @param self
+   */
 	prepare(func, self = null) {
 		const params = this.parameters(func);
 

@@ -19,10 +19,12 @@ const injectServices = ($vm, container) => {
 	}
 };
 
-const container = new Container; // eslint-disable-line
+let container;
 export default {
 	production: process.env.NODE_ENV === 'production',
-	install(Vue) {
+	install(Vue, options = {}) {
+		container = new Container(options.register);
+
 		Vue.prototype.$services = [];
 		Vue.prototype.$ioc = container;
 		Vue.$ioc = container;
