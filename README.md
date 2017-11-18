@@ -62,13 +62,23 @@ Using dependency injection you could just swap out the binding for your HTTP ser
 
 Simply put, in your code you could have:
 ```javascript
+import Axios from 'axios';
+
 Vue.$ioc.register('$http', Axios);
+
+function convertCurrency() {}
+
 Vue.$ioc.register(convertCurrency); // will be registered as 'convertCurrency'
+
+class PostService {}
+
 Vue.$ioc.register(new PostService()); // will be registered as 'PostService'
 ```
 And for your unit tests you could overwrite the binding
 ```javascript
 Vue.$ioc.register('$http', AxiosDummyModule);
+Vue.$ioc.register('convertCurrency', DummyFunc);
+Vue.$ioc.register('PostService', DummyService);
 ```
 Your components however remain entirely unchanged.
 
