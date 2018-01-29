@@ -1,6 +1,9 @@
 # Vuec
 ## Vue container - a simple IoC container for Vue 2
 
+**UNMAINTAINED WARNING** I don't use Vuec myself anymore, and I hardly have time to maintain Vuec.
+If you are interested in taking over the project feel free to contact me.
+
 ### Installation
 Install using `yarn add vue-container` or `npm install --save vue-container`
 
